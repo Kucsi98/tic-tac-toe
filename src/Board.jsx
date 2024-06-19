@@ -3,6 +3,7 @@ import "./App.css";
 import { useState } from "react";
 
 const Board = () => {
+  const [counter, setCounter] = useState(0);
   const initialSquares = Array(9).fill(null);
   const [squares, setSquares] = useState(initialSquares);
   const [xIsNext, setXIsNext] = useState(true);
@@ -15,6 +16,7 @@ const Board = () => {
     if (winnerDeclared || squareFilled) {
       return;
     }
+    setCounter(counter + 1);
     newSquares[i] = xIsNext ? "X" : "O";
     setSquares(newSquares);
     setXIsNext(!xIsNext);
@@ -48,7 +50,9 @@ const Board = () => {
         squares[a] === squares[b] &&
         squares[a] === squares[c]
       ) {
-        return squares[a]; // "x" or 'O'
+        return `Winner: ${squares[a]}`; // "x" or 'O'
+      } else if (counter >= 9) {
+        return "It's a draw";
       }
     }
   }
@@ -57,12 +61,11 @@ const Board = () => {
     setSquares(initialSquares);
     setXIsNext(true);
     calculateWinner(squares);
+    setCounter(0);
   }
 
   const winner = calculateWinner(squares);
-  const status = winner
-    ? `Winner: ${winner}`
-    : `Next player: ${xIsNext ? "X" : "O"}`;
+  const status = winner ? ` ${winner}` : `Next player: ${xIsNext ? "X" : "O"}`;
   return (
     <div>
       <div className="status">{status}</div>
